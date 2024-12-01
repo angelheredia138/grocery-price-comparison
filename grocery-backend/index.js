@@ -25,9 +25,12 @@ app.post("/search", async (req, res) => {
   let query = `
     SELECT 
       p.name AS product_name,
+      c.category_name AS category,
+      s.store_name AS store,
+      pr.price AS price,
       p.brand AS brand,
-      ARRAY_AGG(s.store_name) AS stores,
-      ARRAY_AGG(pr.price) AS prices
+      p.product_url AS product_url,
+      RIGHT(p.product_url, POSITION('/' IN REVERSE(p.product_url)) - 1) AS identifier -- Extract the identifier
     FROM products p
     INNER JOIN categories c ON p.category_id = c.category_id
     INNER JOIN prices pr ON p.product_id = pr.product_id
@@ -36,8 +39,7 @@ app.post("/search", async (req, res) => {
       (p.name ILIKE $1 OR 
        c.category_name ILIKE $1 OR
        s.store_name ILIKE $1 OR
-       p.brand ILIKE $1)
-    GROUP BY p.name, p.brand
+       p.brand ILIKE $1);
   `;
 
   try {

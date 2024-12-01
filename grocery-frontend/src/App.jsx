@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 const App = () => {
@@ -12,7 +12,26 @@ const App = () => {
         searchTerm,
         filter,
       });
-      setResults(response.data);
+
+      // Group results by product_name and brand
+      const groupedResults = response.data.reduce((acc, item) => {
+        const key = `${item.product_name}-${item.brand}`;
+        if (!acc[key]) {
+          acc[key] = {
+            product_name: item.product_name,
+            brand: item.brand,
+            product_url: item.product_url,
+            identifier: item.identifier,
+            stores: [],
+            prices: [],
+          };
+        }
+        acc[key].stores.push(item.store);
+        acc[key].prices.push(item.price);
+        return acc;
+      }, {});
+
+      setResults(Object.values(groupedResults)); // Convert grouped object to array
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -30,7 +49,6 @@ const App = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        overflow: "hidden", // Ensure no overflow in any direction
       }}
     >
       {/* Centered Title and Search */}
@@ -56,7 +74,6 @@ const App = () => {
             style={{
               padding: "10px",
               width: "60%",
-              maxWidth: "100%", // Prevents overflow
               borderRadius: "5px",
               border: "1px solid #ccc",
               fontSize: "16px",
@@ -103,7 +120,6 @@ const App = () => {
       <div
         style={{
           width: "80%",
-          maxWidth: "100%", // Prevents overflow
           marginTop: "20px",
           backgroundColor: "#222",
           borderRadius: "5px",
@@ -114,7 +130,6 @@ const App = () => {
           <table
             style={{
               width: "100%",
-              maxWidth: "100%", // Prevents overflow
               borderCollapse: "collapse",
               margin: "20px 0",
               backgroundColor: "#222",
@@ -123,6 +138,15 @@ const App = () => {
           >
             <thead>
               <tr style={{ backgroundColor: "#444" }}>
+                <th
+                  style={{
+                    border: "1px solid #ddd",
+                    padding: "8px",
+                    textAlign: "center",
+                  }}
+                >
+                  Product Image
+                </th>
                 <th
                   style={{
                     border: "1px solid #ddd",
@@ -153,41 +177,55 @@ const App = () => {
               </tr>
             </thead>
             <tbody>
-              {results.map((item, index) => (
-                <tr key={index}>
-                  <td
-                    style={{
-                      border: "1px solid #ddd",
-                      padding: "8px",
-                      textAlign: "center",
-                    }}
-                  >
-                    {item.product_name}
-                  </td>
-                  <td
-                    style={{
-                      border: "1px solid #ddd",
-                      padding: "8px",
-                      textAlign: "center",
-                    }}
-                  >
-                    {item.brand}
-                  </td>
-                  <td
-                    style={{
-                      border: "1px solid #ddd",
-                      padding: "8px",
-                      textAlign: "center",
-                    }}
-                  >
-                    {item.stores.map((store, i) => (
-                      <div key={i}>
-                        {store}: ${item.prices[i].toFixed(2)}
-                      </div>
-                    ))}
-                  </td>
-                </tr>
-              ))}
+              {results.map((item, index) => {
+                const imageUrl = item.identifier
+                  ? `https://www.trolley.co.uk/img/product/${item.identifier}`
+                  : "https://via.placeholder.com/100";
+
+                return (
+                  <tr key={index}>
+                    <td style={{ textAlign: "center" }}>
+                      <td style={{ textAlign: "center" }}>
+                        <img
+                          src={imageUrl}
+                          alt={item.product_name || "Product"}
+                          onError={(e) => {
+                            e.target.src = "https://via.placeholder.com/150"; // Larger placeholder image
+                          }}
+                          style={{
+                            width: "150px", // Increased width
+                            height: "150px", // Increased height
+                            objectFit: "cover",
+                            borderRadius: "10px", // Optional rounded corners
+                          }}
+                        />
+                      </td>
+                    </td>
+                    <td style={{ textAlign: "center" }}>
+                      {item.product_url ? (
+                        <a
+                          href={item.product_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ color: "#4CAF50", textDecoration: "none" }}
+                        >
+                          {item.product_name}
+                        </a>
+                      ) : (
+                        item.product_name
+                      )}
+                    </td>
+                    <td style={{ textAlign: "center" }}>{item.brand}</td>
+                    <td style={{ textAlign: "center" }}>
+                      {item.stores.map((store, i) => (
+                        <div key={i}>
+                          {store}: ${item.prices[i].toFixed(2)}
+                        </div>
+                      ))}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         ) : (
