@@ -29,7 +29,7 @@ To run this project locally, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-repo-url/grocery-price-comparison.git
+git clone https://github.com/angelheredia138/grocery-price-comparison.git
 cd grocery-price-comparison
 ```
 
