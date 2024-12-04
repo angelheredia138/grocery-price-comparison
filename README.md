@@ -40,7 +40,7 @@ cd grocery-price-comparison
 1. **Navigate to the `backend` folder**:
 
    ```bash
-   cd backend
+   cd grocery-backend
    ```
 
 2. **Install dependencies**:
@@ -78,7 +78,7 @@ cd grocery-price-comparison
 1. **Navigate to the `frontend` folder**:
 
    ```bash
-   cd ../frontend
+   cd ../grocery-frontend
    ```
 
 2. **Install dependencies**:
