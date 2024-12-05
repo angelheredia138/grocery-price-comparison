@@ -1,0 +1,27 @@
+
+COLOR PALETTE
+============================
+Black: 				#000000
+Dark Grey: 			#323232
+Grey: 				#757474
+Light Grey: 		#f1f1f1
+Marker Red: 		#ee5252
+Light Marker Red: 	#fdc9c9
+Marker Blue: 		#5b62ff
+Light Marker Blue: 	#d3c9fd
+Dark Brown: 		#85684d
+Brown: 				#a88a73
+Bag Brown: 			#d9b499
+Light Bag Brown: 	#ebd3c2
+Dark Yellow: 		#bbbd50
+Yellow: 			#e1e366
+Dark Red: 			#8b2525
+Red: 				#b53e3e
+Dark Green: 		#b53e3e
+Green: 				#4b8726
+Light Green: 		#4b8726
+
+FONTS
+============================
+Just Another Hand: https://fonts.google.com/share?selection.family=Just+Another+Hand
+
